@@ -2,7 +2,7 @@
   <v-main>
     <v-container>
        <v-layout wrap>
-       <v-flex v-for="product in products" :key="product.id" xs12 sm6>
+       <v-flex v-for="product in products" :key="product.id" xs12 sm6 md4>
         <DisplayProduct :product="product"/>
       </v-flex>
       </v-layout>

@@ -18,7 +18,6 @@
     <v-card-text class="text--primary">
       <div>{{product.description}}</div>
       <div>￥{{product.price}}</div>
-      <div>￥{{product.id}}</div>
     </v-card-text>
     <v-row class="justify-end">
     <v-card-actions>
