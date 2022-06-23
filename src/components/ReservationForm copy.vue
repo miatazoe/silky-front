@@ -1,17 +1,3 @@
-<!--<template>
-    <div>
-        <h2>Login</h2>
-        <p class="mt-2 text-danger">テスト</p>
-        <form @submit.prevent="login">
-            <label><input v-model="email" placeholder="email"></label>
-            <label><input v-model="pass" placeholder="password"></label>
-            <br>
-            <button type="submit">ログイン</button>
-        </form>
-    </div>
-</template> -->
-
-
 <template>
 <v-main>
     <v-container fluid fill-height>
@@ -111,7 +97,7 @@ export default {
     menuitems: [
       '全身脱毛',
       '光フェイシャル',
-      'VIO+顔脱毛',
+      'VIO+脱毛',
       'おまかせコース',
     ],
     menuRules: [

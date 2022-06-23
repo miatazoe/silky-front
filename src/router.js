@@ -5,14 +5,13 @@ Vue.use(VueRouter);
 
 import LoginPage from "./views/LoginPage.vue";
 import HomePage from "./views/HomePage.vue";
-import ReservationForm from "./views/ReservationForm.vue";
-
+import CustomerPage from "./views/CustomerPage.vue";
 
 const router = new VueRouter({
     mode: "history",
     routes: [
         {
-            path: "/",
+            path: "/login",
             name: "LoginPage",
             component: LoginPage,
         },
@@ -22,11 +21,10 @@ const router = new VueRouter({
             component: HomePage,
         },
         {
-            path: "/reservation",
-            name: "ReservationForm",
-            component: ReservationForm,
-        }
-
+            path: "/customer",
+            name: "CustomerPage",
+            component: CustomerPage,
+        },
     ]
 });
 

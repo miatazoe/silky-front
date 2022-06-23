@@ -1,17 +1,3 @@
-<!--<template>
-    <div>
-        <h2>Login</h2>
-        <p class="mt-2 text-danger">テスト</p>
-        <form @submit.prevent="login">
-            <label><input v-model="email" placeholder="email"></label>
-            <label><input v-model="pass" placeholder="password"></label>
-            <br>
-            <button type="submit">ログイン</button>
-        </form>
-    </div>
-</template> -->
-
-
 <template>
 <v-main>
     <v-container fluid fill-height>
@@ -25,9 +11,9 @@
                 <v-form ref="form">
                     <v-text-field
                         id="email"
-                        name="email"
                         label="email"
                         type="text"
+                        v-model="email"
                         color="teal lighten-3"
                     ></v-text-field>
                     <v-text-field
@@ -35,6 +21,7 @@
                         name="password"
                         label="Password"
                         type="password"
+                        v-model="password"
                         color="teal lighten-3"
                     ></v-text-field>
                 </v-form>
@@ -56,27 +43,30 @@ import axios from 'axios'
 const apiDomain = process.env.VUE_APP_API_DOMAIN
 
 export default {
-
     data() {
         return {
             email: '',
-            pass: '',
+            password: '',
             error: false,
             getUserMessage: ""
         };
     },
     methods: {
-        login() {
-            console.log('test')
-            axios.get(apiDomain+'/sanctum/csrf-cookie')
+        login(){
+            axios.get(apiDomain+'/sanctum/csrf-cookie',{ withCredentials: true })
                 .then(() => {
                     axios.post(apiDomain+'/api/login', {
                         email: this.email,
-                        password: this.pass,
-                    })
+                        password: this.password,
+                    }, { withCredentials: true })
                     .then((res) => {
-                        if( res.data.status_code == 200 ) {
-                            this.$router.push("/home");
+                        console.log(res.status);
+                        if( res.status == 200 ) {
+                            this.$store.dispatch('auth',{
+                                email : res.data.email,
+                                name : res.data.name,
+                            })
+                            this.$router.push('/customer');
                         }
                         this.getUserMessage = 'ログインに失敗しました。'
                     })

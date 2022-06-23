@@ -26,28 +26,27 @@
         target="_blank"
         text
       >
-        <span class="mr-2">ユーザ名</span>
-        <!-- <v-icon>mdi-open-in-new</v-icon> -->
+        <span class="mr-2">{{loginUserName}}</span>
       </v-btn>
     </v-app-bar>
 
     <v-main>
       <router-view />
-      <!-- <HelloWorld/> -->
     </v-main>
   </v-app>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld';
 
 export default {
   name: 'App',
-
   components: {
-    // HelloWorld,
   },
-
+  computed: {
+    loginUserName() {
+      return this.$store.getters.getUserName
+    }
+  },
   data: () => ({
     //
   }),

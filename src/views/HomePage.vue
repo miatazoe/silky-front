@@ -86,7 +86,7 @@
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
-    methods: {
+    methods:{
       getEvents ({ start, end }) {
         const events = []
 
@@ -120,12 +120,21 @@
         return Math.floor((b - a + 1) * Math.random()) + a
       },
     },
+    created() {
+      //ログインへリダイレクト
+      console.log(!this.$store.getters.isAuthenticated)
+      if (!this.$store.getters.isAuthenticated){
+        this.$router.push('/login');
+      }
+    }
   }
 </script>
 
 <!-- <script>
 export default {
-    name: 'HomePage',
-    data: () => ({}),
-  }
+  data() {
+    return {
+    }
+  },
+}
 </script> -->
