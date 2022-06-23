@@ -62,9 +62,7 @@
 
 <script>
 // import axios from 'axios'
-
 // const apiDomain = process.env.VUE_APP_API_DOMAIN
-
 
 export default {
   data: () => ({

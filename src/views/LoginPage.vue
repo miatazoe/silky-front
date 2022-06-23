@@ -66,7 +66,7 @@ export default {
                                 email : res.data.email,
                                 name : res.data.name,
                             })
-                            this.$router.push('/customer');
+                            this.$router.push('/');
                         }
                         this.getUserMessage = 'ログインに失敗しました。'
                     })
