@@ -58,10 +58,10 @@ const apiDomain = process.env.VUE_APP_API_DOMAIN
     methods: {},
     created() {
         //ログインへリダイレクト
-        console.log(!this.$store.getters.isAuthenticated);
-        if (!this.$store.getters.isAuthenticated) {
-            this.$router.push("/login");
-        }
+        // console.log(!this.$store.getters.isAuthenticated);
+        // if (!this.$store.getters.isAuthenticated) {
+        //     this.$router.push("/login");
+        // }
         axios.get(apiDomain + "/api/products", { withCredentials: true })
             .then((res) => {
             console.log(res);
