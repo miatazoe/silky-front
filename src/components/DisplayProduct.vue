@@ -3,7 +3,7 @@
     class="ma-2"
     min-width="200"
     max-width="300"
-    elevation="4"
+    elevation="2"
   >
     <v-img
       class="white--text align-end"
@@ -18,10 +18,11 @@
     <v-card-text class="text--primary">
       <div>{{product.description}}</div>
       <div>￥{{product.price}}</div>
+      <div>￥{{product.id}}</div>
     </v-card-text>
     <v-row class="justify-end">
     <v-card-actions>
-      <ReservationForm />
+      <ReservationForm :productId="product.id"/>
     </v-card-actions>
     </v-row>
   </v-card>
@@ -42,6 +43,9 @@ export default {
       }
     },
     data() {
+      return {
+
+      }
     },
     methods: {
     }

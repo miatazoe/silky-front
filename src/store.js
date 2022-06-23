@@ -11,19 +11,22 @@ const store = new Vuex.Store({
     },
     mutations: {
         setUser(state, user) {
-            state.isAuthenticated = true,
+            state.isAuthenticated = true
             state.email = user.email
             state.name = user.name
         },
         deleteUser(state) {
-            state.isAuthenticated = false;
-            state.email = "";
-            state.name = "";
+            state.isAuthenticated = false
+            state.email = ""
+            state.name = ""
         },
     },
     actions: {
         auth(context, user) {
             context.commit('setUser', user)
+        },
+        logout(context) {
+            context.commit('deleteUser')
         },
     },
     getters: {

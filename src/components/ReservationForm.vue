@@ -16,38 +16,77 @@
     <v-card-text>
         <v-form ref="form">
           <v-text-field
-            v-model ="name"
-            :counter="10"
-            :rules="nameRules"
+            v-model="name"
             label="お名前"
-            disable
+            readonly
             color="teal lighten-3"
+            required
           ></v-text-field>
-          <v-select
-            v-model="sex"
-            :items="sexitems"
-            :rules="sexRules"
-            label="性別"
-          ></v-select>
+          <v-menu
+            v-model="datemenu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date"
+                label="予約日を選択してください。"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="date"
+              @input="datemenu = false"
+              locale="ja-JP"
+            ></v-date-picker>
+          </v-menu>
+          <v-menu
+            ref="menu"
+            v-model="timemenu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            :return-value.sync="time"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="time"
+                label="予約時間を選択してください。"
+                prepend-icon="mdi-clock-time-four-outline"
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-time-picker
+              v-if="timemenu"
+              v-model="time"
+              full-width
+              format="24hr"
+              min="10:00"
+              max="19:00"
+              scrollable
+              :allowed-minutes="m=>m%30 === 0"
+              @click:minute="$refs.menu.save(time)"
+            ></v-time-picker>
+          </v-menu>
           <v-text-field
             v-model="tel"
-            :rules="telRules"
             label="電話番号"
             required
           ></v-text-field>
-          <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            label="メールアドレス"
-            required
-          ></v-text-field>
-          <v-select
-            v-model="menu"
-            :items="menuitems"
-            :rules="menuRules"
-            label="メニュー"
-            required
-          ></v-select>
+          <v-textarea
+            v-model="remark"
+            label="備考"
+          ></v-textarea>
           <v-checkbox
             v-model="checkbox"
             :rules="[v => !!v || '必ずチェックしてください']"
@@ -81,87 +120,58 @@ import axios from 'axios'
 const apiDomain = process.env.VUE_APP_API_DOMAIN
 
 export default {
-  data: () => ({
-    //general
-    dialog: false,
-    name: this.$store.getters.getUserName,
-    sex: '',
-    tel: '',
-    email: '',
-    menu: '',
-    error: false,
-    getUserMessage: "",
-    //form
-    valid: true,
-    name: '',
-    nameRules: [
-      v => !!v || '氏名は必ず入力してください。',
-      v => (v && v.length <= 10) || '氏名は10文字以内です入力してください。',
-    ],
-    sex: null,
-    sexitems: [
-      '男性',
-      '女性',
-      '選択しない',
-    ],
-    sexRules: [
-      v => !!v || '性別は必ず選択してください。',
-    ],
-    tel: '',
-    telRules: [
-      v => !!v || '電話番号は必ず入力してください。',
-      v => /.+@.+\..+/.test(v) || '正しい値で入力してください。',
-    ],
-    email: '',
-    emailRules: [
-      v => !!v || 'メールアドレスは必ず入力してください。',
-      v => /.+@.+\..+/.test(v) || '正しいアドレス形式で入力してください。',
-    ],
-    menu: null,
-    menuitems: [
-      '全身脱毛',
-      '光フェイシャル',
-      'VIO+脱毛',
-      'おまかせコース',
-    ],
-    menuRules: [
-      v => !!v || 'メニューは必ず選択してください。',
-    ],
-    checkbox: false,
-  }),
+  props: {
+    productId: {
+      type: Number,
+    }
+  },
+  data() {
+    return {
+      //general
+      dialog: false,
+      name: this.$store.getters.getUserName,
+      tel: '',
+
+      error: false,
+      // getUserMessage: '',
+      //form
+      valid: false,
+      datemenu: false,
+      timemenu: false,
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      time: null,
+      // telRules: [
+      //   v => !!v || '電話番号は必ず入力してください。',
+      //   v => /.+@.+\..+/.test(v) || '正しい値で入力してください。',
+      // ],
+      checkbox: false,
+      remark: '',
+    };
+  },
 
   methods: {
-    resetValidation () {
-      this.$refs.form.submit()
-    },
     submit() {
-      alert('submitted'),
-      this.$refs.form.submit()
-      console.log('test')
-      axios.get(apiDomain+'/sanctum/csrf-cookie')
-            .then(() => {
-              axios.post(apiDomain+'/api/reservations/create', {
-                name: this.name,
-                sex: this.sex,
-                tel: this.tel,
-                email: this.email,
-                menu: this.menu,
-            })
-            .then((res) => {
-                if( res.data.status_code == 200 ) {
-                    this.$router.push("/reservation");
-                }
-                this.getUserMessage = '予約に失敗しました、もう一度試してください。'
-            })
-            .catch((err) => {
-                console.log(err);
-                this.getUserMessage = '予約保存に失敗しました。'
-            })
-        })
-        .catch(() => {
-        //
-        })
-      }
+      axios.post(apiDomain+'/api/reservations/store', {
+          date: this.date,
+          time: this.time,
+          tel: this.tel,
+          remark: this.remark,
+          pid : this.productId
+        } ,{
+        withCredentials: true
+      })
+      .then((res) => {
+          if( res.data.status_code == 200 ) {
+            this.dialog = false
+            this.$router.push("/");
+          }
+          this.getUserMessage = '予約に失敗しました、もう一度試してください。'
+      })
+      .catch((err) => {
+          console.log(err);
+          this.getUserMessage = '予約保存に失敗しました。'
+      })
+    }
   },
 }
 </script>
